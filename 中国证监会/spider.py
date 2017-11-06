@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #抓取中国证监会，抓取网站http://www.csrc.gov.cn/pub/newsite/xxpl/yxpl/
-#抓取ajax请求所获取的页面,抓取其pdf文档，下载至
-#运行时只需更改get_page_index的[页面page]参数即可
-#更新时间2017-11-2
+#抓取访问页面,抓取其pdf文档，下载至downpdf/zgjzh
+#运行时不需要任何操作，只更新最近一页的内容
+#更新时间2017-11-6
 
 #引入Requests库 
 import requests
@@ -27,7 +27,7 @@ def get_index_page(url):
             return response.text
         return None
     except RequestException:
-        print('请求页面发生异常')
+        print('error:请求页面发生异常')
         return None
 #格式化html页面，将每个“招股说明书【报告的名字和url】”截取下来
 def parser_index_html(html):
@@ -72,7 +72,7 @@ def save_pdf(con, contents):
                 f.close()
                 print('保存成功', file_name)
     except Exception as e:
-        print('保存报告发生异常', e)
+        print('error:保存报告发生异常', e)
 #主函数
 def main(page):
     try:
@@ -91,7 +91,7 @@ def main(page):
             else:
                 print(con['title'],'文件已存在')
     except Exception as e:
-        print('主函数异常', e)
+        print('error:主函数异常', e)
 #执行函数
 if __name__ == '__main__':
     main(0)

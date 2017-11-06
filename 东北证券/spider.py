@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #抓取东北证券，抓取网站http://www.nesc.cn/classHTML/0001000100020002000600070004.html
-#抓取ajax请求所获取的页面,抓取其pdf文档，下载至
-#运行时只需更改get_page_index的[页面page]参数即可
+#抓取ajax请求所获取的页面,抓取其pdf文档，下载至downpdf/dbzq
+#运行时不需要任何操作，只抓取最近100条报告
 #更新时间2017-11-2
 
 #引入Requests库，用于格式化html代码
@@ -42,7 +42,7 @@ def post_index_page(page):
             return res.text
         return None
     except RequestException:
-        print('请求索引页出错')
+        print('error:请求索引页出错')
         return None
 #传入post_index_page返回的结果，对结果做简单处理，取出每篇报告的'题目'和'对应的id'
 def parser_index_html(html):
@@ -66,7 +66,7 @@ def post_sub_html(item):
             return response.text
         return None
     except RequestException:
-        print('请求',item['title'],'报告页面出错')
+        print('error:请求',item['title'],'报告页面出错')
         return None
 #传入post_sub_html返回的结果、题头，对json串进行处理，获取并请求pdf报告网页版，返回2进制串
 def parser_sub_html(html,item):
@@ -78,7 +78,7 @@ def parser_sub_html(html,item):
         else:
             return None
     except RequestException:
-        print('获取',item['title'],'报告内容出错')
+        print('error:获取',item['title'],'报告内容出错')
         return None
 #判断单个报告是否存在，如果存在返回y
 def jud_file(con):
@@ -98,7 +98,7 @@ def down_file(contents, title):
                 f.close()
                 print('保存成功', file_name)
     except Exception as e:
-        print('保存报告发生异常', e)
+        print('error:保存报告发生异常', e)
 #主函数
 def main(page):
     try:
@@ -114,7 +114,7 @@ def main(page):
             else:
                 print(item['title'],'文件已存在')
     except Exception as e:
-        print('主函数异常', e)
+        print('error:主函数异常', e)
 #执行函数
 if __name__ == '__main__':
     main(1)
