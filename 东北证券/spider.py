@@ -80,6 +80,11 @@ def parser_sub_html(html,item):
     except RequestException:
         print('获取',item['title'],'报告内容出错')
         return None
+#判断单个报告是否存在，如果存在返回y
+def jud_file(con):
+    filename = '/Users/zhaozk/Desktop/python/downpdf/dbzq/%s.pdf' % con['title']
+    if os.path.exists(filename):
+        return 'y'
 #将二进制内容，存储到'题目.pdf'文件里
 def down_file(contents, title):
     try:
@@ -99,16 +104,17 @@ def main(page):
     try:
         html = post_index_page(page)
         for item in parser_index_html(html):
-            sub_html = post_sub_html(item)
-            contents = parser_sub_html(sub_html,item)
-            if contents:
-                down_file(contents, item['title'])
+            if jud_file(item) is not 'y':
+                sub_html = post_sub_html(item)
+                contents = parser_sub_html(sub_html,item)
+                if contents:
+                    down_file(contents, item['title'])
+                else:
+                    print(item['title'],' 没有内容')
             else:
-                print(item['title'],' 没有内容')
+                print(item['title'],'文件已存在')
     except Exception as e:
         print('主函数异常', e)
 #执行函数
 if __name__ == '__main__':
-    # for i in range(1, 10):
-        # print(i)
     main(1)
